@@ -2,7 +2,7 @@ package com.example.assignment3
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.util.Log
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +11,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
     private lateinit var rvRecycleView:RecyclerView
@@ -41,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addExpense(){
-        val intent = Intent(this, add_expense::class.java)
+        val intent = Intent(this, new_transaction::class.java)
         startActivity(intent)
     }
 

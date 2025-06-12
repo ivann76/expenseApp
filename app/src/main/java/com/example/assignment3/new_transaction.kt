@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -12,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -24,11 +27,12 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class add_expense : AppCompatActivity() {
+class new_transaction : AppCompatActivity() {
+    private lateinit var transactionType: RadioGroup
     private lateinit var closeButton:ImageButton
     private lateinit var amount:TextInputEditText
     private lateinit var description: EditText
-    private lateinit var addExpenseBtn: Button
+    private lateinit var btnAddTransaction: Button
     private lateinit var llCategory: LinearLayout
     private lateinit var tvCategory:TextView
     private lateinit var ivCategoryIcon: ImageView
@@ -39,7 +43,7 @@ class add_expense : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_add_expense)
+        setContentView(R.layout.activity_new_transaction)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -48,6 +52,7 @@ class add_expense : AppCompatActivity() {
         init()
         buttonClicked()
         categoryList()
+        transactionType()
         // Set current date (you can format it as you prefer)
         val currentDate = Calendar.getInstance()
         updateDateDisplay(currentDate)
@@ -56,21 +61,40 @@ class add_expense : AppCompatActivity() {
         closeButton = findViewById(R.id.btn_close)
         amount = findViewById(R.id.et_amount)
         description = findViewById(R.id.et_description)
-        addExpenseBtn = findViewById(R.id.btn_add_expense)
+        btnAddTransaction = findViewById(R.id.btn_add_transaction)
         llCategory = findViewById(R.id.ll_category)
         tvCategory = findViewById(R.id.tv_category)
         ivCategoryIcon = findViewById(R.id.iv_category_icon)
         llDate = findViewById(R.id.ll_date)
         tvDate = findViewById(R.id.tv_date)
         ivCalendar = findViewById(R.id.iv_calendar)
+        transactionType = findViewById(R.id.rg_transaction_type)
     }
 
     private fun buttonClicked(){
         closeButton.setOnClickListener{finish()}
-        addExpenseBtn.setOnClickListener{addExpense()}
+        btnAddTransaction.setOnClickListener{addExpense()}
         llDate.setOnClickListener { showDatePicker() }
     }
 
+    private fun transactionType(){
+        transactionType.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.rb_expense -> {
+                    // Show category section for expenses
+                    tvCategory.visibility = View.VISIBLE
+                    llCategory.visibility = View.VISIBLE
+                    btnAddTransaction.text = "Add Expense"
+                }
+                R.id.rb_income -> {
+                    // Hide category section for income
+                    tvCategory.visibility = View.GONE
+                    llCategory.visibility = View.GONE
+                    btnAddTransaction.text = "Add Income"
+                }
+            }
+        }
+    }
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -174,7 +198,7 @@ class add_expense : AppCompatActivity() {
                 Toast.makeText(this, "Transaction saved!", Toast.LENGTH_SHORT).show()
                 Handler(Looper.getMainLooper()).postDelayed({
                     finish()
-                }, 100)
+                }, 5)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Failed to save Transaction: ${e.message}", Toast.LENGTH_SHORT).show()
