@@ -26,7 +26,7 @@ class myAdapter: RecyclerView.Adapter<myAdapter.ViewHolder>() {
         val transaction = transactions[position]
         holder.category.text = transaction.category
         holder.detail.text = transaction.detail
-        holder.price.text = transaction.price
+        holder.price.text= transaction.price.toString()
 //        holder.date.text = transaction.date
     }
 

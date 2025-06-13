@@ -1,6 +1,8 @@
 package com.example.assignment3
 
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
+import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
 
 class new_transaction : AppCompatActivity() {
     private lateinit var transactionType: RadioGroup
@@ -176,33 +177,77 @@ class new_transaction : AppCompatActivity() {
     }
 
     private fun addExpense() {
-        val db = FirebaseDatabase.getInstance().getReference("Transaction")
+        val db = FirebaseDatabase.getInstance().getReference("transaction")
+        val dataB = FirebaseDatabase.getInstance().getReference("finance")
 
-        val price = amount.text.toString().trim()
+        val price = amount.text.toString().toDoubleOrNull() ?: 0.0
         val categoryName = tvCategory.text.toString().trim()
         val detail = description.text.toString().trim()
         val date = tvDate.text.toString().trim()
 
-        Log.d("dataCheck", "${price},${categoryName},${detail},${date}")
+        val selectedTypeId = transactionType.checkedRadioButtonId
+        val selectedRadio = findViewById<RadioButton>(selectedTypeId)
+        val type = selectedRadio.text.toString().uppercase()
 
-        if (price.isEmpty() || categoryName.isEmpty() || detail.isEmpty()) {
+
+        Log.d("dataCheck", "${price},${categoryName},${detail},${date},${type}")
+
+        if (price.isNaN() || categoryName.isEmpty() || detail.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val transactionId = db.push().key ?: "default_id"
-        val transaction = Transaction(transactionId, categoryName, detail, price, date)
+        val income = price
+        var balance = 0.0
+        balance += price
 
-        db.child(transactionId).setValue(transaction)
-            .addOnCompleteListener {
-                Toast.makeText(this, "Transaction saved!", Toast.LENGTH_SHORT).show()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    finish()
-                }, 5)
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to save Transaction: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        //make sure is not duplicate data store inside database
+        //if not user might keep press the button until the toast message is coming out
+        val progressDialog = ProgressDialog(this).apply {
+            setMessage("Saving...")
+            setCancelable(false)
+            show()
+        }
+
+        if(type == "INCOME"){
+            val financeId = dataB.push().key!!
+            val finance = FinanceSummary(financeId,balance,income)
+            dataB.child(financeId).setValue(finance)
+                .addOnCompleteListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(this, "Transaction saved!", Toast.LENGTH_SHORT).show()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        finish()
+                    }, 1)
+                }
+                .addOnFailureListener { e ->
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this,
+                        "Failed to save Transaction: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
+        else if(type == "EXPENSE"){
+            val transactionId = db.push().key!!
+            val transaction = Transaction(transactionId, type, categoryName, detail, price, date)
+            db.child(transactionId).setValue(transaction)
+                .addOnCompleteListener {
+                    Toast.makeText(this, "Transaction saved!", Toast.LENGTH_SHORT).show()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        finish()
+                    }, 1)
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        this,
+                        "Failed to save Transaction: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
+
     }
 
 }
