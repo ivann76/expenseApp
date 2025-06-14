@@ -2,7 +2,6 @@ package com.example.assignment3
 
 import android.app.DatePickerDialog
 import android.app.ProgressDialog
-import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,7 +22,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -40,6 +43,8 @@ class new_transaction : AppCompatActivity() {
     private lateinit var llDate:LinearLayout
     private lateinit var tvDate:TextView
     private lateinit var ivCalendar:ImageView
+    private lateinit var database: DatabaseReference
+    private var balance: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,6 +182,23 @@ class new_transaction : AppCompatActivity() {
     }
 
     private fun addExpense() {
+        database = FirebaseDatabase.getInstance().reference
+        val financeRef = database.child("finance")
+        financeRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (financeSnapshot in snapshot.children) {
+                    balance = financeSnapshot.child("balance").getValue(Double::class.java)!!
+                    Log.d("FirebaseData", "$balance")
+                }
+                proceedToSaveTransaction()
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseError", "Failed to read value.", error.toException())
+            }
+        })
+    }
+
+    private fun proceedToSaveTransaction(){
         val db = FirebaseDatabase.getInstance().getReference("transaction")
         val dataB = FirebaseDatabase.getInstance().getReference("finance")
 
@@ -198,9 +220,9 @@ class new_transaction : AppCompatActivity() {
         }
 
         val income = price
-        var balance = 0.0
         balance += price
 
+        btnAddTransaction.isEnabled = false
         //make sure is not duplicate data store inside database
         //if not user might keep press the button until the toast message is coming out
         val progressDialog = ProgressDialog(this).apply {
@@ -222,6 +244,7 @@ class new_transaction : AppCompatActivity() {
                 }
                 .addOnFailureListener { e ->
                     progressDialog.dismiss()
+                    btnAddTransaction.isEnabled = false
                     Toast.makeText(
                         this,
                         "Failed to save Transaction: ${e.message}",
@@ -234,12 +257,15 @@ class new_transaction : AppCompatActivity() {
             val transaction = Transaction(transactionId, type, categoryName, detail, price, date)
             db.child(transactionId).setValue(transaction)
                 .addOnCompleteListener {
+                    progressDialog.dismiss()
                     Toast.makeText(this, "Transaction saved!", Toast.LENGTH_SHORT).show()
                     Handler(Looper.getMainLooper()).postDelayed({
                         finish()
                     }, 1)
                 }
                 .addOnFailureListener { e ->
+                    progressDialog.dismiss()
+                    btnAddTransaction.isEnabled = false
                     Toast.makeText(
                         this,
                         "Failed to save Transaction: ${e.message}",
@@ -247,7 +273,6 @@ class new_transaction : AppCompatActivity() {
                     ).show()
                 }
         }
-
     }
 
 }
