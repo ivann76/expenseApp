@@ -101,7 +101,11 @@ class MainActivity : AppCompatActivity() {
                     if (transaction?.type == "EXPENSE") {
                         tempList.add(transaction)
                     }
+                    else if(transaction?.type == "INCOME"){
+                        tempList.add(transaction)
+                    }
                 }
+                tempList.reverse()
                 adapter.updateData(tempList)
             }
 

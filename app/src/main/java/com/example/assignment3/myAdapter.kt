@@ -37,7 +37,7 @@ class myAdapter: RecyclerView.Adapter<myAdapter.ViewHolder>() {
             "transport" -> R.drawable.transportation_icons
             "shopping" -> R.drawable.shopping_icons
             "entertainment" -> R.drawable.entertaiment_icons
-            else -> R.drawable.food_icons // fallback logo
+            else -> R.drawable.income_icon // fallback logo
         }
 
         holder.logo.setImageResource(logoResId)

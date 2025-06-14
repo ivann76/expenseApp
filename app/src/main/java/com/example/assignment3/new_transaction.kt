@@ -212,7 +212,7 @@ class new_transaction : AppCompatActivity() {
 
         if(type == "INCOME"){
             val transactionId = db.push().key!!
-            val transaction = Transaction(transactionId, type, null, detail, price, date)
+            val transaction = Transaction(transactionId, type, "Income", detail, price, date)
             db.child(transactionId).setValue(transaction)
                 .addOnCompleteListener {
                     updateFinanceSummary(transaction, progressDialog)
