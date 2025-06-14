@@ -44,7 +44,6 @@ class new_transaction : AppCompatActivity() {
     private lateinit var tvDate:TextView
     private lateinit var ivCalendar:ImageView
     private lateinit var database: DatabaseReference
-    private var balance: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

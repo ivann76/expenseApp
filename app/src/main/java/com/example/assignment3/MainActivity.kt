@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
     private lateinit var rvRecycleView:RecyclerView
+    private lateinit var adapter: myAdapter
     private lateinit var addButton: FloatingActionButton
     private lateinit var tvTotalBalance: TextView
     private lateinit var tvTotalIncome: TextView
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         init()
         buttonClicked()
         getFinanceData()
+        recycleView()
     }
 
     private fun init(){
@@ -79,14 +81,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun recycleView(){
+        rvRecycleView = findViewById(R.id.recyclerView)
+        adapter = myAdapter()
+
+
         rvRecycleView.layoutManager = LinearLayoutManager(this)
-        rvRecycleView.adapter = myAdapter()
-//        val newTransaction = Transaction(
-//            category = "Adidas Store",
-//            detail = "Credit Card",
-//            price = "$180",
-//            date = "Tue, 11 June 2025"
-//        )
-//        myAdapter.addTransaction(newTransaction)
+        rvRecycleView.adapter = adapter
+
+        loadTransactionsFromFirebase()
     }
+
+    private fun loadTransactionsFromFirebase() {
+        val database = FirebaseDatabase.getInstance().getReference("transaction")
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tempList = mutableListOf<Transaction>()
+                for (item in snapshot.children) {
+                    val transaction = item.getValue(Transaction::class.java)
+                    if (transaction?.type == "EXPENSE") {
+                        tempList.add(transaction)
+                    }
+                }
+                adapter.updateData(tempList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Failed to load data: ${error.message}")
+            }
+        })
+    }
+
 }

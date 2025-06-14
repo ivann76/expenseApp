@@ -1,8 +1,10 @@
 package com.example.assignment3
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -14,6 +16,7 @@ class myAdapter: RecyclerView.Adapter<myAdapter.ViewHolder>() {
         val detail: TextView = itemView.findViewById(R.id.detail)
         val price: TextView = itemView.findViewById(R.id.price)
         val date: TextView = itemView.findViewById(R.id.date)
+        val logo: ImageView = itemView.findViewById(R.id.logo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,14 +30,27 @@ class myAdapter: RecyclerView.Adapter<myAdapter.ViewHolder>() {
         holder.category.text = transaction.category
         holder.detail.text = transaction.detail
         holder.price.text= transaction.price.toString()
-//        holder.date.text = transaction.date
+        holder.date.text = transaction.date
+        // Set the logo based on the category
+        val logoResId = when (transaction.category?.lowercase()) {
+            "food" -> R.drawable.food_icons
+            "transport" -> R.drawable.transportation_icons
+            "shopping" -> R.drawable.shopping_icons
+            "entertainment" -> R.drawable.entertaiment_icons
+            else -> R.drawable.food_icons // fallback logo
+        }
+
+        holder.logo.setImageResource(logoResId)
     }
 
     override fun getItemCount(): Int = transactions.size
 
-//    // Add a method to insert a new transaction
-//    fun addTransaction(transaction: Transaction) {
-//        transactions.add(transaction)
-//        notifyItemInserted(transactions.size - 1)
-//    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newList: List<Transaction>) {
+        transactions.clear()
+        transactions.addAll(newList)
+        notifyDataSetChanged()
+    }
+
+
 }
