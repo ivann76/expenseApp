@@ -181,24 +181,7 @@ class new_transaction : AppCompatActivity() {
         }
     }
 
-    private fun addExpense() {
-        database = FirebaseDatabase.getInstance().reference
-        val financeRef = database.child("finance")
-        financeRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (financeSnapshot in snapshot.children) {
-                    balance = financeSnapshot.child("balance").getValue(Double::class.java)!!
-                    Log.d("FirebaseData", "$balance")
-                }
-                proceedToSaveTransaction()
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("FirebaseError", "Failed to read value.", error.toException())
-            }
-        })
-    }
-
-    private fun proceedToSaveTransaction(){
+    private fun addExpense(){
         val db = FirebaseDatabase.getInstance().getReference("transaction")
         val dataB = FirebaseDatabase.getInstance().getReference("finance")
 
@@ -214,13 +197,13 @@ class new_transaction : AppCompatActivity() {
 
         Log.d("dataCheck", "${price},${categoryName},${detail},${date},${type}")
 
-        if (price.isNaN() || categoryName.isEmpty() || detail.isEmpty()) {
+        if (price.isNaN() || categoryName.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val income = price
-        balance += price
+//        val income = price
+//        balance += price
 
         btnAddTransaction.isEnabled = false
         //make sure is not duplicate data store inside database
@@ -232,11 +215,11 @@ class new_transaction : AppCompatActivity() {
         }
 
         if(type == "INCOME"){
-            val financeId = dataB.push().key!!
-            val finance = FinanceSummary(financeId,balance,income)
-            dataB.child(financeId).setValue(finance)
+            val transactionId = db.push().key!!
+            val transaction = Transaction(transactionId, type, null, detail, price, date)
+            db.child(transactionId).setValue(transaction)
                 .addOnCompleteListener {
-                    progressDialog.dismiss()
+                    updateFinanceSummary(transaction, progressDialog)
                     Toast.makeText(this, "Transaction saved!", Toast.LENGTH_SHORT).show()
                     Handler(Looper.getMainLooper()).postDelayed({
                         finish()
@@ -257,7 +240,7 @@ class new_transaction : AppCompatActivity() {
             val transaction = Transaction(transactionId, type, categoryName, detail, price, date)
             db.child(transactionId).setValue(transaction)
                 .addOnCompleteListener {
-                    progressDialog.dismiss()
+                    updateFinanceSummary(transaction, progressDialog)
                     Toast.makeText(this, "Transaction saved!", Toast.LENGTH_SHORT).show()
                     Handler(Looper.getMainLooper()).postDelayed({
                         finish()
@@ -274,5 +257,44 @@ class new_transaction : AppCompatActivity() {
                 }
         }
     }
+    private fun updateFinanceSummary(transaction: Transaction, progressDialog: ProgressDialog) {
+        val financeRef = FirebaseDatabase.getInstance().getReference("finance")
+        financeRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val current = snapshot.children.firstOrNull()?.getValue(FinanceSummary::class.java)
+                val summaryId = current?.id ?: financeRef.push().key!!
+
+                var balance = current?.balance ?: 0.0
+                var income = current?.income ?: 0.0
+                var expense = current?.expense ?: 0.0
+
+                if (transaction.type == "INCOME") {
+                    balance += transaction.price ?: 0.0
+                    income += transaction.price ?: 0.0
+                } else if (transaction.type == "EXPENSE") {
+                    balance -= transaction.price ?: 0.0
+                    expense += transaction.price ?: 0.0
+                }
+
+                val updatedSummary = FinanceSummary(summaryId, balance, income, expense)
+                financeRef.child(summaryId).setValue(updatedSummary)
+                    .addOnCompleteListener {
+                        progressDialog.dismiss()
+                        Toast.makeText(this@new_transaction, "Transaction saved!", Toast.LENGTH_SHORT).show()
+                        Handler(Looper.getMainLooper()).postDelayed({ finish() }, 1)
+                    }
+                    .addOnFailureListener { e ->
+                        progressDialog.dismiss()
+                        Toast.makeText(this@new_transaction, "Failed to update summary: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                progressDialog.dismiss()
+                Toast.makeText(this@new_transaction, "Could not read finance summary", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -21,7 +22,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvRecycleView:RecyclerView
     private lateinit var addButton: FloatingActionButton
     private lateinit var tvTotalBalance: TextView
-//    private lateinit var database: DatabaseReference
+    private lateinit var tvTotalIncome: TextView
+    private lateinit var tvTotalExpense: TextView
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,32 +37,70 @@ class MainActivity : AppCompatActivity() {
         }
         init()
         buttonClicked()
-
+        getBalanceData()
+//        getTransactionData()
     }
 
     private fun init(){
         rvRecycleView = findViewById(R.id.recyclerView)
         addButton = findViewById(R.id.add_button)
         tvTotalBalance = findViewById(R.id.tv_total_balance)
+        tvTotalIncome = findViewById(R.id.tv_total_income)
+        tvTotalExpense = findViewById(R.id.tv_total_expense)
+
     }
 
     private fun buttonClicked(){
         addButton.setOnClickListener{addExpense()}
     }
 
-//    private fun getBalanceData() {
-//        database.child("transactions").addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//
-//                val specificUser = database.child("").getValue(Transaction::class.java)
-//                specificUser?.let {
-//                    Log.d("FirebaseExample", "Specific User: ${it.price}")
-//                }
-//
-//            }
-//
-//        })
-//    }
+    private fun getBalanceData() {
+        database = FirebaseDatabase.getInstance().reference
+        val financeRef = database.child("finance")
+        financeRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (financeSnapshot in snapshot.children) {
+                    val balance = financeSnapshot.child("balance").getValue(Double::class.java).toString()
+                    tvTotalBalance.text = "$${balance}"
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseError", "Failed to read value.", error.toException())
+            }
+        })
+    }
+
+    private fun getTransactionData(){
+        val db = FirebaseDatabase.getInstance().getReference("transaction")
+        db.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var income = 0.0
+                var expense = 0.0
+
+                for (transactionSnapshot in snapshot.children) {
+                    val transaction = transactionSnapshot.getValue(Transaction::class.java)
+                    val date = transaction?.date ?: continue
+
+                    // Assuming "2025-06" is the current month you're displaying
+                    if (date.startsWith("2025-06")) {
+                        when (transaction.type) {
+                            "INCOME" -> income += transaction.price ?: 0.0
+                            "EXPENSE" -> expense += transaction.price ?: 0.0
+                        }
+                    }
+                }
+
+                // Now you can display all three:
+                tvTotalIncome.text = "$$income"
+                tvTotalExpense.text = "$$expense"
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@MainActivity, "Failed to load transactions", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun addExpense(){
         val intent = Intent(this, new_transaction::class.java)
         startActivity(intent)

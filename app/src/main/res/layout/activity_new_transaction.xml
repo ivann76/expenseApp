@@ -123,11 +123,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:text="Description (Optional)"
             android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/et_description"
