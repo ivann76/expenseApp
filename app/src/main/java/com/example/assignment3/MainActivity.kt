@@ -37,8 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
         init()
         buttonClicked()
-        getBalanceData()
-//        getTransactionData()
+        getFinanceData()
     }
 
     private fun init(){
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         addButton.setOnClickListener{addExpense()}
     }
 
-    private fun getBalanceData() {
+    private fun getFinanceData() {
         database = FirebaseDatabase.getInstance().reference
         val financeRef = database.child("finance")
         financeRef.addValueEventListener(object : ValueEventListener {
@@ -62,41 +61,14 @@ class MainActivity : AppCompatActivity() {
                 for (financeSnapshot in snapshot.children) {
                     val balance = financeSnapshot.child("balance").getValue(Double::class.java).toString()
                     tvTotalBalance.text = "$${balance}"
+                    val income = financeSnapshot.child("income").getValue(Double::class.java).toString()
+                    val expense = financeSnapshot.child("expense").getValue(Double::class.java).toString()
+                    tvTotalIncome.text = "$${income}"
+                    tvTotalExpense.text = "$${expense}"
                 }
             }
             override fun onCancelled(error: DatabaseError) {
                 Log.e("FirebaseError", "Failed to read value.", error.toException())
-            }
-        })
-    }
-
-    private fun getTransactionData(){
-        val db = FirebaseDatabase.getInstance().getReference("transaction")
-        db.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                var income = 0.0
-                var expense = 0.0
-
-                for (transactionSnapshot in snapshot.children) {
-                    val transaction = transactionSnapshot.getValue(Transaction::class.java)
-                    val date = transaction?.date ?: continue
-
-                    // Assuming "2025-06" is the current month you're displaying
-                    if (date.startsWith("2025-06")) {
-                        when (transaction.type) {
-                            "INCOME" -> income += transaction.price ?: 0.0
-                            "EXPENSE" -> expense += transaction.price ?: 0.0
-                        }
-                    }
-                }
-
-                // Now you can display all three:
-                tvTotalIncome.text = "$$income"
-                tvTotalExpense.text = "$$expense"
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, "Failed to load transactions", Toast.LENGTH_SHORT).show()
             }
         })
     }

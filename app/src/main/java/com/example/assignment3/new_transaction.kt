@@ -183,7 +183,6 @@ class new_transaction : AppCompatActivity() {
 
     private fun addExpense(){
         val db = FirebaseDatabase.getInstance().getReference("transaction")
-        val dataB = FirebaseDatabase.getInstance().getReference("finance")
 
         val price = amount.text.toString().toDoubleOrNull() ?: 0.0
         val categoryName = tvCategory.text.toString().trim()
@@ -202,8 +201,6 @@ class new_transaction : AppCompatActivity() {
             return
         }
 
-//        val income = price
-//        balance += price
 
         btnAddTransaction.isEnabled = false
         //make sure is not duplicate data store inside database
@@ -278,15 +275,6 @@ class new_transaction : AppCompatActivity() {
 
                 val updatedSummary = FinanceSummary(summaryId, balance, income, expense)
                 financeRef.child(summaryId).setValue(updatedSummary)
-                    .addOnCompleteListener {
-                        progressDialog.dismiss()
-                        Toast.makeText(this@new_transaction, "Transaction saved!", Toast.LENGTH_SHORT).show()
-                        Handler(Looper.getMainLooper()).postDelayed({ finish() }, 1)
-                    }
-                    .addOnFailureListener { e ->
-                        progressDialog.dismiss()
-                        Toast.makeText(this@new_transaction, "Failed to update summary: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -295,6 +283,5 @@ class new_transaction : AppCompatActivity() {
             }
         })
     }
-
 
 }
