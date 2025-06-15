@@ -61,12 +61,12 @@ class MainActivity : AppCompatActivity() {
         financeRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (financeSnapshot in snapshot.children) {
-                    val balance = financeSnapshot.child("balance").getValue(Double::class.java).toString()
-                    tvTotalBalance.text = "$${balance}"
-                    val income = financeSnapshot.child("income").getValue(Double::class.java).toString()
-                    val expense = financeSnapshot.child("expense").getValue(Double::class.java).toString()
-                    tvTotalIncome.text = "$${income}"
-                    tvTotalExpense.text = "$${expense}"
+                    val balance = financeSnapshot.child("balance").getValue(Double::class.java)?: 0.0
+                    tvTotalBalance.text = String.format("$%.2f", balance)
+                    val income = financeSnapshot.child("income").getValue(Double::class.java)?: 0.0
+                    val expense = financeSnapshot.child("expense").getValue(Double::class.java)?: 0.0
+                    tvTotalIncome.text = String.format("$%.1f", income)
+                    tvTotalExpense.text = String.format("$%.1f", expense)
                 }
             }
             override fun onCancelled(error: DatabaseError) {

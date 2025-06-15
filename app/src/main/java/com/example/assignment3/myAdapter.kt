@@ -29,7 +29,7 @@ class myAdapter: RecyclerView.Adapter<myAdapter.ViewHolder>() {
         val transaction = transactions[position]
         holder.category.text = transaction.category
         holder.detail.text = transaction.detail
-        holder.price.text= transaction.price.toString()
+        holder.price.text= "$${transaction.price.toString()}"
         holder.date.text = transaction.date
         // Set the logo based on the category
         val logoResId = when (transaction.category?.lowercase()) {
@@ -41,6 +41,14 @@ class myAdapter: RecyclerView.Adapter<myAdapter.ViewHolder>() {
         }
 
         holder.logo.setImageResource(logoResId)
+        // Change price color based on type
+        val context = holder.itemView.context
+        val colorRes = if (transaction.type == "INCOME") {
+            R.color.green_expense // change to your green color
+        } else {
+            R.color.red_expense // change to your red color
+        }
+        holder.price.setTextColor(context.getColor(colorRes))
     }
 
     override fun getItemCount(): Int = transactions.size

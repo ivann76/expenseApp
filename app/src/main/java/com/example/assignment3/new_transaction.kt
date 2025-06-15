@@ -195,7 +195,7 @@ class new_transaction : AppCompatActivity() {
 
         Log.d("dataCheck", "${price},${categoryName},${detail},${date},${type}")
 
-        if (price.isNaN() || categoryName.isEmpty()) {
+        if (price.isNaN() || categoryName.isEmpty() || detail.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             return
         }
