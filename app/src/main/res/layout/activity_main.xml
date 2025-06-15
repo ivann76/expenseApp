@@ -80,7 +80,7 @@
 
                     </LinearLayout>
 
-
+                    <!-- Total Balance Card -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -133,109 +133,117 @@
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="175dp"
+                    <!-- Income and Expense Cards Container -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="horizontal"
                         android:layout_marginHorizontal="20dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="30dp"
-                        app:cardCornerRadius="20dp"
-                        app:cardElevation="8dp"
-                        app:cardBackgroundColor="@color/white">
+                        android:weightSum="2"
+                        android:gravity="center">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="20dp">
+                        <!-- Income Card -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="10dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="8dp"
+                            app:cardBackgroundColor="@color/white">
 
-                            <!-- Card Header -->
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Income"
-                                    android:textColor="@color/text_light_gray"
-                                    android:textSize="16sp" />
-
-                            </LinearLayout>
-
-                            <!-- Balance Amount -->
-                            <TextView
-                                android:id="@+id/tv_total_income"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="24dp"
-                                android:text="$0.00"
-                                android:textColor="@color/black"
-                                android:textSize="32sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="175dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="30dp"
-                        app:cardCornerRadius="20dp"
-                        app:cardElevation="8dp"
-                        app:cardBackgroundColor="@color/white">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="20dp">
-
-                            <!-- Card Header -->
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:padding="20dp">
 
-                                <TextView
-                                    android:layout_width="0dp"
+                                <!-- Card Header -->
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Expense"
-                                    android:textColor="@color/text_light_gray"
-                                    android:textSize="16sp" />
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="Income"
+                                        android:textColor="@color/text_light_gray"
+                                        android:textSize="16sp" />
+
+                                </LinearLayout>
+
+                                <!-- Balance Amount -->
+                                <TextView
+                                    android:id="@+id/tv_total_income"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="24dp"
+                                    android:text="$0.00"
+                                    android:textColor="@color/black"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
 
                             </LinearLayout>
 
-                            <!-- Balance Amount -->
-                            <TextView
-                                android:id="@+id/tv_total_expense"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="24dp"
-                                android:text="$0.00"
-                                android:textColor="@color/black"
-                                android:textSize="32sp"
-                                android:textStyle="bold" />
+                        </com.google.android.material.card.MaterialCardView>
 
-                        </LinearLayout>
+                        <!-- Expense Card -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="10dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="8dp"
+                            app:cardBackgroundColor="@color/white">
 
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:padding="20dp">
+
+                                <!-- Card Header -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="Expense"
+                                        android:textColor="@color/text_light_gray"
+                                        android:textSize="16sp" />
+
+                                </LinearLayout>
+
+                                <!-- Balance Amount -->
+                                <TextView
+                                    android:id="@+id/tv_total_expense"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="24dp"
+                                    android:text="$0.00"
+                                    android:textColor="@color/black"
+                                    android:textSize="24sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
 
                     <!-- Transactions Section -->
                     <LinearLayout

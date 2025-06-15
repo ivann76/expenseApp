@@ -54,4 +54,6 @@ dependencies {
     implementation(libs.play.services.base)
     implementation(libs.firebase.firestore.ktx.v2471)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.mpandroidchart)
+
 }

@@ -3,6 +3,7 @@ package com.example.assignment3
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvTotalIncome: TextView
     private lateinit var tvTotalExpense: TextView
     private lateinit var database: DatabaseReference
+    private lateinit var insightBtn: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,11 +50,17 @@ class MainActivity : AppCompatActivity() {
         tvTotalBalance = findViewById(R.id.tv_total_balance)
         tvTotalIncome = findViewById(R.id.tv_total_income)
         tvTotalExpense = findViewById(R.id.tv_total_expense)
-
+        insightBtn = findViewById(R.id.nav_insights)
     }
 
     private fun buttonClicked(){
         addButton.setOnClickListener{addExpense()}
+        insightBtn.setOnClickListener{navigation()}
+    }
+
+    private fun navigation(){
+        val intent = Intent(this, insight::class.java)
+        startActivity(intent)
     }
 
     private fun getFinanceData() {
