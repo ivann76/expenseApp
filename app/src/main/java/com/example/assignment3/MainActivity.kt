@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
     private lateinit var rvRecycleView:RecyclerView
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvTotalExpense: TextView
     private lateinit var database: DatabaseReference
     private lateinit var insightBtn: LinearLayout
+    private lateinit var view_all_btn: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,14 +53,20 @@ class MainActivity : AppCompatActivity() {
         tvTotalIncome = findViewById(R.id.tv_total_income)
         tvTotalExpense = findViewById(R.id.tv_total_expense)
         insightBtn = findViewById(R.id.nav_insights)
+        view_all_btn = findViewById(R.id.view_all_button)
     }
 
     private fun buttonClicked(){
         addButton.setOnClickListener{addExpense()}
-        insightBtn.setOnClickListener{navigation()}
+        insightBtn.setOnClickListener{navigateInsight()}
+        view_all_btn.setOnClickListener{navigateAllTransaction()}
     }
 
-    private fun navigation(){
+    private fun navigateAllTransaction(){
+        val intent = Intent(this,AllTransactionList::class.java)
+        startActivity(intent)
+    }
+    private fun navigateInsight(){
         val intent = Intent(this, insight::class.java)
         startActivity(intent)
     }

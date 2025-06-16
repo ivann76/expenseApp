@@ -131,7 +131,7 @@ class insight : AppCompatActivity() {
 
                     // Value styling
                     valueTextSize = 12f
-                    valueTextColor = Color.WHITE
+                    valueTextColor = Color.BLACK
                     valueTypeface = Typeface.DEFAULT_BOLD
 
                     // Slice styling
@@ -140,14 +140,13 @@ class insight : AppCompatActivity() {
 
                     // Value positioning
                     setDrawValues(true)
-                    yValuePosition = PieDataSet.ValuePosition.INSIDE_SLICE
-                    xValuePosition = PieDataSet.ValuePosition.INSIDE_SLICE
+                    yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+                    xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
 
                     // Use custom value formatter to show currency
                     valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
                         override fun getFormattedValue(value: Float): String {
-                            return if (value < 5f) "" // Hide values for small slices
-                            else String.format("%.1f%%", value)
+                            return String.format("%.1f%%", value)
                         }
                     }
                 }
