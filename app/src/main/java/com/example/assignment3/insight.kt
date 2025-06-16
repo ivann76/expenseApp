@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -20,7 +21,7 @@ class insight : AppCompatActivity() {
 
     private lateinit var pieChart: PieChart
     private lateinit var database: DatabaseReference
-    private lateinit var closeBtn: ImageButton
+    private lateinit var navHome: LinearLayout
 
     // Custom color palette for better aesthetics
     private val customColors = intArrayOf(
@@ -42,12 +43,13 @@ class insight : AppCompatActivity() {
 
         pieChart = findViewById(R.id.pieChart)
         database = FirebaseDatabase.getInstance().getReference("transaction")
-        closeBtn = findViewById(R.id.btn_close)
-        closeBtn.setOnClickListener{finish()}
+        navHome = findViewById(R.id.nav_home)
+        navHome.setOnClickListener{finish()}
 
         setupPieChart()
         loadSpendingBreakdown()
     }
+
 
     private fun setupPieChart() {
         pieChart.apply {
