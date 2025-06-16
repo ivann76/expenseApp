@@ -114,7 +114,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 tempList.reverse()
-                adapter.updateData(tempList)
+                // Only show the latest 3 (or change to 5 if you want)
+                val latestTransactions = tempList.take(4)
+                adapter.updateData(latestTransactions)
             }
 
             override fun onCancelled(error: DatabaseError) {
