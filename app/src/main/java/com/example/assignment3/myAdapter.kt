@@ -61,7 +61,6 @@ class myAdapter(
             holder.menuBtn.visibility = View.GONE
         }
 
-
         holder.menuBtn.setOnClickListener {
             val popup = PopupMenu(context, holder.menuBtn)
             popup.inflate(R.menu.transaction_menu)

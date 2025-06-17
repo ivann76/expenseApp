@@ -42,23 +42,6 @@
                         android:padding="20dp"
                         android:gravity="center_vertical">
 
-                        <!-- Profile Avatar -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp"
-                            app:cardBackgroundColor="@color/avatar_purple">
-
-                            <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_gravity="center"
-                                android:background="@drawable/person"
-                                android:tint="@android:color/white" />
-
-                        </com.google.android.material.card.MaterialCardView>
-
                         <!-- Home Title -->
                         <TextView
                             android:layout_width="0dp"
@@ -69,14 +52,6 @@
                             android:textStyle="bold"
                             android:textColor="@color/text_dark"
                             android:gravity="center" />
-
-                        <!-- Notification Icon -->
-                        <ImageButton
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:src="@drawable/notification_alert"
-                            android:background="@drawable/notification_bg"
-                            app:tint="@color/text_dark" />
 
                     </LinearLayout>
 
