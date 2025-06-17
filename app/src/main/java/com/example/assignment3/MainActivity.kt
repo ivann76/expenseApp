@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         init()
         buttonClicked()
         getFinanceData()
-        recycleView()
+        setupRecyclerView()
     }
 
     private fun init(){
@@ -96,9 +96,12 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun recycleView(){
+    private fun setupRecyclerView() {
         rvRecycleView = findViewById(R.id.recyclerView)
-        adapter = myAdapter()
+
+        adapter = myAdapter(
+            showMenu = false
+        )
 
 
         rvRecycleView.layoutManager = LinearLayoutManager(this)
@@ -106,6 +109,20 @@ class MainActivity : AppCompatActivity() {
 
         loadTransactionsFromFirebase()
     }
+
+    private fun deleteTransaction(transaction: Transaction) {
+        val id = transaction.id
+        if (id != null) {
+            database.child(id).removeValue().addOnSuccessListener {
+                Toast.makeText(this, "Deleted successfully", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Toast.makeText(this, "Failed to delete", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error: No ID found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun loadTransactionsFromFirebase() {
         val database = FirebaseDatabase.getInstance().getReference("transaction")

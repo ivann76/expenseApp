@@ -3,48 +3,43 @@ package com.example.assignment3
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 
 class AllTransactionList : AppCompatActivity() {
+
     private lateinit var rvRecycleView: RecyclerView
     private lateinit var adapter: myAdapter
-    private lateinit var closeBtn:ImageButton
+    private lateinit var closeBtn: ImageButton
+    private val databaseRef: DatabaseReference = FirebaseDatabase.getInstance().getReference("transaction")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_all_transaction_list)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        recycleView()
-        closeBtnClicked()
+        setupRecyclerView()
+        closeBtn = findViewById(R.id.btn_close)
+        closeBtn.setOnClickListener { finish() }
     }
 
-    private fun closeBtnClicked(){
-        closeBtn = findViewById(R.id.btn_close)
-        closeBtn.setOnClickListener{finish()}
-    }
-    private fun recycleView(){
+    private fun setupRecyclerView() {
         rvRecycleView = findViewById(R.id.recyclerView)
-        adapter = myAdapter()
+
+        adapter = myAdapter(
+            showMenu = true,
+            onDeleteClick = { transaction -> deleteTransaction(transaction) }
+        )
 
 
         rvRecycleView.layoutManager = LinearLayoutManager(this)
@@ -54,16 +49,13 @@ class AllTransactionList : AppCompatActivity() {
     }
 
     private fun loadTransactionsFromFirebase() {
-        val database = FirebaseDatabase.getInstance().getReference("transaction")
-        database.addValueEventListener(object : ValueEventListener {
+        databaseRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val tempList = mutableListOf<Transaction>()
                 for (item in snapshot.children) {
                     val transaction = item.getValue(Transaction::class.java)
-                    if (transaction?.type == "EXPENSE") {
-                        tempList.add(transaction)
-                    }
-                    else if(transaction?.type == "INCOME"){
+                    if (transaction != null) {
+                        transaction.id = item.key.toString() // Make sure ID is saved
                         tempList.add(transaction)
                     }
                 }
@@ -75,5 +67,18 @@ class AllTransactionList : AppCompatActivity() {
                 Log.e("Firebase", "Failed to load data: ${error.message}")
             }
         })
+    }
+
+    private fun deleteTransaction(transaction: Transaction) {
+        val id = transaction.id
+        if (id != null) {
+            databaseRef.child(id).removeValue().addOnSuccessListener {
+                Toast.makeText(this, "Deleted successfully", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Toast.makeText(this, "Failed to delete", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Error: No ID found", Toast.LENGTH_SHORT).show()
+        }
     }
 }
