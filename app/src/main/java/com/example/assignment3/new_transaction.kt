@@ -55,7 +55,7 @@ class new_transaction : AppCompatActivity() {
             insets
         }
         init()
-        buttonClicked()
+        buttonClickedListener()
         categoryList()
         transactionType()
         // Set current date (you can format it as you prefer)
@@ -77,7 +77,7 @@ class new_transaction : AppCompatActivity() {
         layoutCategorySection = findViewById(R.id.layout_category_section)
     }
 
-    private fun buttonClicked(){
+    private fun buttonClickedListener(){
         closeButton.setOnClickListener{finish()}
         btnAddTransaction.setOnClickListener{addExpense()}
         llDate.setOnClickListener { showDatePicker() }

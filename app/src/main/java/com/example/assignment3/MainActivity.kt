@@ -3,6 +3,8 @@ package com.example.assignment3
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -25,11 +27,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: myAdapter
     private lateinit var addButton: FloatingActionButton
     private lateinit var tvTotalBalance: TextView
-    private lateinit var tvTotalIncome: TextView
-    private lateinit var tvTotalExpense: TextView
     private lateinit var database: DatabaseReference
     private lateinit var insightBtn: LinearLayout
     private lateinit var view_all_btn: TextView
+    private lateinit var noTransactionImage: ImageView
+    private lateinit var noTransactionText: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         init()
-        buttonClicked()
+        buttonClickedListener()
         getFinanceData()
         setupRecyclerView()
     }
@@ -50,13 +53,13 @@ class MainActivity : AppCompatActivity() {
         rvRecycleView = findViewById(R.id.recyclerView)
         addButton = findViewById(R.id.add_button)
         tvTotalBalance = findViewById(R.id.tv_total_balance)
-        tvTotalIncome = findViewById(R.id.tv_total_income)
-        tvTotalExpense = findViewById(R.id.tv_total_expense)
         insightBtn = findViewById(R.id.nav_insights)
         view_all_btn = findViewById(R.id.view_all_button)
+        noTransactionImage = findViewById(R.id.img_no_transaction)
+        noTransactionText = findViewById(R.id.text_no_transaction)
     }
 
-    private fun buttonClicked(){
+    private fun buttonClickedListener(){
         addButton.setOnClickListener{addExpense()}
         insightBtn.setOnClickListener{navigateInsight()}
         view_all_btn.setOnClickListener{navigateAllTransaction()}
@@ -79,10 +82,6 @@ class MainActivity : AppCompatActivity() {
                 for (financeSnapshot in snapshot.children) {
                     val balance = financeSnapshot.child("balance").getValue(Double::class.java)?: 0.0
                     tvTotalBalance.text = String.format("$%.2f", balance)
-                    val income = financeSnapshot.child("income").getValue(Double::class.java)?: 0.0
-                    val expense = financeSnapshot.child("expense").getValue(Double::class.java)?: 0.0
-                    tvTotalIncome.text = String.format("$%.1f", income)
-                    tvTotalExpense.text = String.format("$%.1f", expense)
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -110,19 +109,6 @@ class MainActivity : AppCompatActivity() {
         loadTransactionsFromFirebase()
     }
 
-    private fun deleteTransaction(transaction: Transaction) {
-        val id = transaction.id
-        if (id != null) {
-            database.child(id).removeValue().addOnSuccessListener {
-                Toast.makeText(this, "Deleted successfully", Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener {
-                Toast.makeText(this, "Failed to delete", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(this, "Error: No ID found", Toast.LENGTH_SHORT).show()
-        }
-    }
-
 
     private fun loadTransactionsFromFirebase() {
         val database = FirebaseDatabase.getInstance().getReference("transaction")
@@ -142,6 +128,15 @@ class MainActivity : AppCompatActivity() {
                 // Only show the latest 3 (or change to 5 if you want)
                 val latestTransactions = tempList.take(4)
                 adapter.updateData(latestTransactions)
+                if (tempList.isEmpty()) {
+                    noTransactionImage.visibility = View.VISIBLE
+                    noTransactionText.visibility = View.VISIBLE
+                    rvRecycleView.visibility = View.GONE
+                } else {
+                    noTransactionImage.visibility = View.GONE
+                    noTransactionText.visibility = View.GONE
+                    rvRecycleView.visibility = View.VISIBLE
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {

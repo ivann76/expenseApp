@@ -50,7 +50,6 @@ class insight : AppCompatActivity() {
         loadSpendingBreakdown()
     }
 
-
     private fun setupPieChart() {
         pieChart.apply {
             // Basic setup
