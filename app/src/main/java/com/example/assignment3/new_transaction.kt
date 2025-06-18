@@ -43,7 +43,7 @@ class new_transaction : AppCompatActivity() {
     private lateinit var llDate:LinearLayout
     private lateinit var tvDate:TextView
     private lateinit var ivCalendar:ImageView
-    private lateinit var database: DatabaseReference
+    private lateinit var layoutCategorySection: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +74,7 @@ class new_transaction : AppCompatActivity() {
         tvDate = findViewById(R.id.tv_date)
         ivCalendar = findViewById(R.id.iv_calendar)
         transactionType = findViewById(R.id.rg_transaction_type)
+        layoutCategorySection = findViewById(R.id.layout_category_section)
     }
 
     private fun buttonClicked(){
@@ -86,19 +87,16 @@ class new_transaction : AppCompatActivity() {
         transactionType.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rb_expense -> {
-                    // Show category section for expenses
-                    tvCategory.visibility = View.VISIBLE
-                    llCategory.visibility = View.VISIBLE
+                    layoutCategorySection.visibility = View.VISIBLE
                     btnAddTransaction.text = "Add Expense"
                 }
                 R.id.rb_income -> {
-                    // Hide category section for income
-                    tvCategory.visibility = View.GONE
-                    llCategory.visibility = View.GONE
+                    layoutCategorySection.visibility = View.GONE
                     btnAddTransaction.text = "Add Income"
                 }
             }
         }
+
     }
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
