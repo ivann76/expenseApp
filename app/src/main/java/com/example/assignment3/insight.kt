@@ -1,20 +1,18 @@
 package com.example.assignment3
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 
 class insight : AppCompatActivity() {
@@ -22,6 +20,7 @@ class insight : AppCompatActivity() {
     private lateinit var pieChart: PieChart
     private lateinit var database: DatabaseReference
     private lateinit var navHome: LinearLayout
+    private lateinit var addBtn: FloatingActionButton
 
     // Custom color palette for better aesthetics
     private val customColors = intArrayOf(
@@ -41,13 +40,27 @@ class insight : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insight)
 
+        init()
+        buttonClickedListener()
+        setupPieChart()
+        loadSpendingBreakdown()
+    }
+
+    private fun init(){
         pieChart = findViewById(R.id.pieChart)
         database = FirebaseDatabase.getInstance().getReference("transaction")
         navHome = findViewById(R.id.nav_home)
-        navHome.setOnClickListener{finish()}
+        addBtn = findViewById(R.id.add_button)
+    }
 
-        setupPieChart()
-        loadSpendingBreakdown()
+    private fun buttonClickedListener(){
+        navHome.setOnClickListener{finish()}
+        addBtn.setOnClickListener{addExpense()}
+    }
+
+    private fun addExpense(){
+        val intent = Intent(this, new_transaction::class.java)
+        startActivity(intent)
     }
 
     private fun setupPieChart() {
