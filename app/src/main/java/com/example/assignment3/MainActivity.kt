@@ -125,8 +125,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 tempList.reverse()
-                // Only show the latest 3 (or change to 5 if you want)
-                val latestTransactions = tempList.take(4)
+                // Only show the latest 4 in main view
+                val latestTransactions = tempList.take(5)
                 adapter.updateData(latestTransactions)
                 if (tempList.isEmpty()) {
                     noTransactionImage.visibility = View.VISIBLE

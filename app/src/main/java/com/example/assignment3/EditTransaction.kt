@@ -23,6 +23,7 @@ class EditTransaction : AppCompatActivity() {
     private lateinit var ivCategoryIcon: ImageView
     private lateinit var transactionType: RadioGroup
     private lateinit var layoutCategorySection: LinearLayout
+    private lateinit var closeBtn: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +56,12 @@ class EditTransaction : AppCompatActivity() {
         ivCategoryIcon = findViewById(R.id.iv_category_icon)
         transactionType = findViewById(R.id.rg_transaction_type)
         layoutCategorySection = findViewById(R.id.layout_category_section)
+        closeBtn = findViewById(R.id.btn_close)
     }
 
     private fun buttonClickedListener() {
         btnAddTransaction.setOnClickListener { saveTransaction() }
+        closeBtn.setOnClickListener{finish()}
     }
 
     private fun populateFieldsForEdit(transaction: Transaction) {
