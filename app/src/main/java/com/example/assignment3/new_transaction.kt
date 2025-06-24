@@ -128,7 +128,6 @@ class new_transaction : AppCompatActivity() {
     }
 
 
-
     private fun categoryList(){
         // Define your categories with their icons
         data class CategoryItem(val name: String, val iconRes: Int)
