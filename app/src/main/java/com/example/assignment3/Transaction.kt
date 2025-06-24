@@ -1,11 +1,13 @@
 package com.example.assignment3
+import java.io.Serializable
 
 
 data class Transaction(
     var id: String? = null,
-    val type: String? = null,
-    val category: String? = null,
-    val detail: String? = null,
-    val price: Double? = 0.0,
-    val date: String? = null
-)
+    var type: String? = null,
+    var category: String? = null,
+    var detail: String? = null,
+    var price: Double? = null,
+    var date: String? = null
+) : Serializable
+

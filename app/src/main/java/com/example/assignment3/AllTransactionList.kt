@@ -1,5 +1,6 @@
 package com.example.assignment3
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -54,8 +55,14 @@ class AllTransactionList : AppCompatActivity() {
 
         adapter = myAdapter(
             showMenu = true,
-            onDeleteClick = { transaction -> deleteTransaction(transaction) }
+            onDeleteClick = { transaction -> deleteTransaction(transaction) },
+            onEditClick = { transaction ->
+                val intent = Intent(this, EditTransaction::class.java)
+                intent.putExtra("transaction", transaction)
+                startActivity(intent)
+            }
         )
+
 
 
         rvRecycleView.layoutManager = LinearLayoutManager(this)

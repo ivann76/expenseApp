@@ -125,23 +125,9 @@ class new_transaction : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("MMM d', 'yyyy", Locale.getDefault())
         tvDate.text = dateFormat.format(calendar.time)
 
-        // Alternative format with ordinal indicator (1st, 2nd, 3rd, etc.)
-        // tvDate.text = getDateWithOrdinal(calendar)
     }
 
-//    // Optional: For ordinal dates (1st, 2nd, 3rd, etc.)
-//    private fun getDateWithOrdinal(calendar: Calendar): String {
-//        val day = calendar.get(Calendar.DAY_OF_MONTH)
-//        val suffix = when (day % 10) {
-//            1 -> if (day != 11) "st" else "th"
-//            2 -> if (day != 12) "nd" else "th"
-//            3 -> if (day != 13) "rd" else "th"
-//            else -> "th"
-//        }
-//
-//        val dateFormat = SimpleDateFormat("MMM d'$suffix, 'yyyy", Locale.getDefault())
-//        return dateFormat.format(calendar.time)
-//    }
+
 
     private fun categoryList(){
         // Define your categories with their icons

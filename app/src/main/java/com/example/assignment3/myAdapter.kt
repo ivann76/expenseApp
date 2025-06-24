@@ -12,7 +12,8 @@ import androidx.appcompat.widget.PopupMenu
 
 class myAdapter(
     private val showMenu: Boolean = false,
-    private val onDeleteClick: ((Transaction) -> Unit)? = null
+    private val onDeleteClick: ((Transaction) -> Unit)? = null,
+    private val onEditClick: ((Transaction) -> Unit)? = null
 ) : RecyclerView.Adapter<myAdapter.ViewHolder>() {
 
     private val transactions = mutableListOf<Transaction>()
@@ -70,12 +71,17 @@ class myAdapter(
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_delete -> {
-                        onDeleteClick?.let { it1 -> it1(transaction) }
+                        onDeleteClick?.invoke(transaction)
+                        true
+                    }
+                    R.id.menu_edit -> {
+                        onEditClick?.invoke(transaction)
                         true
                     }
                     else -> false
                 }
             }
+
             popup.show()
         }
     }
