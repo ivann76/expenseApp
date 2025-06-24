@@ -55,5 +55,10 @@ dependencies {
     implementation(libs.firebase.firestore.ktx.v2471)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.mpandroidchart)
+    androidTestImplementation(libs.androidx.espresso.core.v351)
+    androidTestImplementation(libs.androidx.junit.v115)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+
 
 }

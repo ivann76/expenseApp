@@ -1,6 +1,8 @@
 [versions]
 agp = "8.10.1"
+androidxJunit = "1.1.5"
 desugar_jdk_libs = "2.1.5"
+espressoCoreVersion = "3.5.1"
 firebaseFirestoreKtxVersion = "24.7.1"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
@@ -17,10 +19,16 @@ recyclerview = "1.4.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseDatabase = "21.0.0"
 firebaseFirestoreKtx = "25.1.4"
+rules = "1.6.1"
+runner = "1.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-espresso-core-v351 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
+androidx-junit-v115 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 firebase-firestore-ktx-v2471 = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtxVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
