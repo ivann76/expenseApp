@@ -109,7 +109,6 @@ class MainActivity : AppCompatActivity() {
         loadTransactionsFromFirebase()
     }
 
-
     private fun loadTransactionsFromFirebase() {
         val database = FirebaseDatabase.getInstance().getReference("transaction")
         database.addValueEventListener(object : ValueEventListener {
