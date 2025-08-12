@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">assignment3</string>
+    <string name="app_name">Expense Manager</string>
     <string name="no_transaction">No Transaction</string>
 </resources>
