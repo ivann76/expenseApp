@@ -14,6 +14,8 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
+import android.text.SpannableString
+import android.text.style.RelativeSizeSpan
 
 class insight : AppCompatActivity() {
 
@@ -35,6 +37,21 @@ class insight : AppCompatActivity() {
         Color.parseColor("#BB8FCE"), // Light Purple
         Color.parseColor("#85C1E9")  // Light Blue
     )
+
+    private fun getDynamicCenterText(totalAmount: Double): SpannableString {
+        val title = "Total Expenses\n"
+        val amount = "$${String.format("%.2f", totalAmount)}"
+        val fullText = title + amount
+
+        val spannable = SpannableString(fullText)
+
+        // Make the first line (title) slightly smaller
+        spannable.setSpan(RelativeSizeSpan(0.5f), 0, title.length, 0)
+        // Make the amount bigger
+        spannable.setSpan(RelativeSizeSpan(1.0f), title.length, fullText.length, 0)
+
+        return spannable
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,14 +184,14 @@ class insight : AppCompatActivity() {
 
                 pieChart.apply {
                     data = pieData
+                    centerText = getDynamicCenterText(totalAmount)
 
-                    // Update center text with total
-                    centerText = "Total Expenses\n$${String.format("%.2f", totalAmount)}"
+                    // Dynamic base text size based on screen width
+                    val screenWidth = resources.displayMetrics.widthPixels
+                    val baseSizeSp = (screenWidth * 0.045f) / resources.displayMetrics.density
+                    setCenterTextSize(baseSizeSp)
 
-                    // Animation
                     animateY(1200, com.github.mikephil.charting.animation.Easing.EaseInOutQuad)
-
-                    // Refresh
                     invalidate()
                 }
             }
