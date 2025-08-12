@@ -136,7 +136,8 @@ class new_transaction : AppCompatActivity() {
             CategoryItem("Food", R.drawable.food_icons),
             CategoryItem("Transport", R.drawable.transportation_icons),
             CategoryItem("Shopping", R.drawable.shopping_icons),
-            CategoryItem("Entertainment", R.drawable.entertaiment_icons)
+            CategoryItem("Entertainment", R.drawable.entertaiment_icons),
+            CategoryItem("Sport", R.drawable.social_logo)
         )
 
         llCategory.setOnClickListener { view ->

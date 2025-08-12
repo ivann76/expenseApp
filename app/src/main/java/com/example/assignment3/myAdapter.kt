@@ -46,6 +46,7 @@ class myAdapter(
             "transport" -> R.drawable.transportation_icons
             "shopping" -> R.drawable.shopping_icons
             "entertainment" -> R.drawable.entertaiment_icons
+            "sport" -> R.drawable.social_logo
             else -> R.drawable.income_icon
         }
 
